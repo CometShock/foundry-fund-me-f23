@@ -2,23 +2,27 @@
 
 pragma solidity ^0.8.18;
 
+import {DeployFundMe} from "../../script/DeployFundMe.s.sol";
+import {FundMe} from "../../src/FundMe.sol";
+import {HelperConfig} from "../../script/HelperConfig.s.sol";
 import {Test, console} from "forge-std/Test.sol";
-import {FundMe} from "../src/FundMe.sol";
-import {DeployFundMe} from "../script/DeployFundMe.s.sol";
+import {StdCheats} from "forge-std/StdCheats.sol";
 
 contract FundMeTest is Test {
     FundMe fundMe;
+    HelperConfig public helperConfig;
 
-    address USER = makeAddr("user");
     uint256 constant SEND_VALUE = 0.1 ether;
     uint256 constant STARTING_BALANCE = 10 ether;
     uint256 constant GAS_PRICE = 1;
 
+    address public constant USER = address(1);
+
     function setUp() external {
         //  us -> FundMeTest -> FundMe
         //fundMe = new FundMe(0x694AA1769357215DE4FAC081bf1f309aDC325306);
-        DeployFundMe deployFundMe = new DeployFundMe();
-        fundMe = deployFundMe.run();
+        DeployFundMe deployer = new DeployFundMe();
+        (fundMe, helperConfig) = deployer.run();
         vm.deal(USER, STARTING_BALANCE);
     }
 
